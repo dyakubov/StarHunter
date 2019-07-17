@@ -14,10 +14,10 @@ public class MenuScreen extends BaseScreen {
     private Texture spaceshipPic;
     private Vector2 touchPos; //Touch position
     private Vector2 v; //Initial speed
-    private Vector2 currentV; //Current speed
     private Vector2 pos; //Spaceship current position
-    private Vector2 direction; //Spaceship direction
-    private float length; //Length of path from spaceship to touch position
+    private Vector2 buf;
+
+    private static final float V_LEN = 4f;
 
 
 
@@ -27,22 +27,21 @@ public class MenuScreen extends BaseScreen {
         background = new Texture("background.png");
         spaceshipPic = new Texture("spaceship.png");
         touchPos = new Vector2();
-        v = new Vector2(4, 4);
-        currentV = new Vector2(0,0);
+        v = new Vector2();
         pos = new Vector2();
-        direction = new Vector2();
-        length = 0;
+        buf = new Vector2();
+
+
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
-
-        pos.add(currentV);
-        length = (touchPos.cpy().sub(pos)).len();
-
-        if (length < 2){
-            currentV.setZero();
+        buf.set(touchPos);
+        if (buf.sub(pos).len() > V_LEN) {
+            pos.add(v);
+        } else{
+            pos.set(touchPos);
         }
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -64,8 +63,7 @@ public class MenuScreen extends BaseScreen {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         touchPos.set(screenX, Gdx.graphics.getHeight() - screenY);
-        direction.set(touchPos.cpy().sub(pos)).nor();
-        currentV.set(v.cpy().scl(direction));
+        v.set(touchPos.cpy().sub(pos)).setLength(V_LEN);
         return false;
     }
 
@@ -78,24 +76,24 @@ public class MenuScreen extends BaseScreen {
     private void setDirectionByKey(int keycode){
         switch (keycode){
             //Up
-            case 19: currentV.set(v.cpy().scl(0,1));
+            case 19: v.set(v.cpy().scl(0,1));
             break;
 
             //Down
-            case 20: currentV.set(v.cpy().scl(0, -1));
+            case 20: v.set(v.cpy().scl(0, -1));
             break;
 
             //Left
-            case 21: currentV.set(v.cpy().scl(-1, 0));
+            case 21: v.set(v.cpy().scl(-1, 0));
             break;
 
             //Right
-            case 22: currentV.set(v.cpy().scl(1, 0));
+            case 22: v.set(v.cpy().scl(1, 0));
             break;
 
             //Space
             case 62: pos.set(0,0);
-            currentV.set(0, 0);
+            v.set(0, 0);
             break;
 
             default:
