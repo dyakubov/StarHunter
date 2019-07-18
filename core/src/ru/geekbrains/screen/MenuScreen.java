@@ -35,11 +35,11 @@ public class MenuScreen extends BaseScreen {
     @Override
     public void render(float delta) {
         super.render(delta);
-        buf.set(touch.cpy());
+        buf.set(touch);
         if (buf.sub(spaceCraft.getX(), spaceCraft.getY()).len() > V_LEN) {
             spaceCraft.setPosition(spaceCraft.getX() + v.x, spaceCraft.getY() + v.y);
-
         } else{
+            spaceCraft.setPosition(touch.x, touch.y);
             v.setZero();
         }
         Gdx.gl.glClearColor(0.26f, 0.5f, 0.8f, 1);
