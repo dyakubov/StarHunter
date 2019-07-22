@@ -108,7 +108,6 @@ public abstract class BaseScreen implements Screen, InputProcessor {
     }
 
     public boolean touchDown(Vector2 touch, int pointer, int button) {
-        System.out.println("touchDown touch.X = " + touch.x + " touch.Y = " + touch.y);
         return false;
     }
 
@@ -120,7 +119,6 @@ public abstract class BaseScreen implements Screen, InputProcessor {
     }
 
     public boolean touchUp(Vector2 touch, int pointer, int button) {
-        System.out.println("touchUp touch.X = " + touch.x + " touch.Y = " + touch.y);
         return false;
     }
 
