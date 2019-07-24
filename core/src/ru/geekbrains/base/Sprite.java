@@ -52,6 +52,19 @@ public abstract class Sprite extends Rect {
         return false;
     }
 
+    public boolean touchDragged (Vector2 touch, int pointer) {
+        return false;
+    }
+
+    public boolean keyDown (int keycode) {
+        return false;
+    }
+
+    public boolean keyUp (int keycode) {
+        return false;
+    }
+
+
     public float getAngle() {
         return angle;
     }
@@ -66,5 +79,9 @@ public abstract class Sprite extends Rect {
 
     public void setScale(float scale) {
         this.scale = scale;
+    }
+
+    public TextureRegion[] getRegions() {
+        return regions;
     }
 }
