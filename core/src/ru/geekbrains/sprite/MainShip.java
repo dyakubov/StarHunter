@@ -55,11 +55,13 @@ public class MainShip extends Sprite {
             reloadTimer = 0f;
             shoot();
         }
-        if (getLeft() > worldBounds.getRight()) {
-            setLeft(worldBounds.getLeft());
-        }
-        if (getRight() < worldBounds.getLeft()) {
+        if (getRight() > worldBounds.getRight()) {
             setRight(worldBounds.getRight());
+            stop();
+        }
+        if (getLeft() < worldBounds.getLeft()) {
+            setLeft(worldBounds.getLeft());
+            stop();
         }
     }
 
