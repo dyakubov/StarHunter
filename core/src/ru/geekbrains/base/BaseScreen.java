@@ -15,7 +15,7 @@ public abstract class BaseScreen implements Screen, InputProcessor {
 
     protected SpriteBatch batch;
     private Rect screenBounds;
-    private Rect worldBounds;
+    protected Rect worldBounds;
     private Rect glBounds;
 
     private Matrix4 worldToGl;
@@ -108,6 +108,7 @@ public abstract class BaseScreen implements Screen, InputProcessor {
     }
 
     public boolean touchDown(Vector2 touch, int pointer, int button) {
+        System.out.println("touchDown touch.X = " + touch.x + " touch.Y = " + touch.y);
         return false;
     }
 
@@ -119,6 +120,7 @@ public abstract class BaseScreen implements Screen, InputProcessor {
     }
 
     public boolean touchUp(Vector2 touch, int pointer, int button) {
+        System.out.println("touchUp touch.X = " + touch.x + " touch.Y = " + touch.y);
         return false;
     }
 
