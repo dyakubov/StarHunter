@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import ru.geekbrains.base.MusicPlayer;
 import ru.geekbrains.base.Sprite;
 import ru.geekbrains.math.Rect;
 import ru.geekbrains.pool.BulletPool;
@@ -55,11 +56,13 @@ public class MainShip extends Sprite {
             reloadTimer = 0f;
             shoot();
         }
-        if (getLeft() > worldBounds.getRight()) {
-            setLeft(worldBounds.getLeft());
-        }
-        if (getRight() < worldBounds.getLeft()) {
+        if (getRight() > worldBounds.getRight()) {
             setRight(worldBounds.getRight());
+            stop();
+        }
+        if (getLeft() < worldBounds.getLeft()) {
+            setLeft(worldBounds.getLeft());
+            stop();
         }
     }
 
@@ -155,5 +158,6 @@ public class MainShip extends Sprite {
     private void shoot() {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, pos, bulletV, 0.01f, worldBounds, 1);
+        MusicPlayer.playMainShipShootSound();
     }
 }
