@@ -12,11 +12,11 @@ public class Enemy extends Ship {
 
     private enum State {DESCENT, FIGHT}
     private State state;
-
     private Vector2 descentV = new Vector2(0, -0.15f);
 
     public Enemy(BulletPool bulletPool, Rect worldBounds) {
         shootSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
+        explosionSound = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
         this.bulletPool = bulletPool;
         this.worldBounds = worldBounds;
         v = new Vector2();
@@ -41,7 +41,12 @@ public class Enemy extends Ship {
                     reloadTimer = 0f;
                     shoot();
                 }
-                if (getBottom() < worldBounds.getBottom()) {
+                if (hp <= 0){
+                    destroy();
+                    explosionSound.play();
+                }
+
+                if (getBottom() < worldBounds.getBottom()){
                     destroy();
                 }
                 break;
@@ -72,5 +77,4 @@ public class Enemy extends Ship {
         v.set(descentV);
         state = State.DESCENT;
     }
-
 }
