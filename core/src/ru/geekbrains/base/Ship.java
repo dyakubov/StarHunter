@@ -23,6 +23,7 @@ public abstract class Ship extends Sprite {
     protected float bulletHeight;
 
     protected Sound shootSound;
+    protected Sound explosionSound;
 
     protected int damage;
     protected int hp;
@@ -48,5 +49,13 @@ public abstract class Ship extends Sprite {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, pos, bulletV, bulletHeight, worldBounds, damage);
         shootSound.play();
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
     }
 }
