@@ -1,5 +1,6 @@
 package ru.geekbrains.screen;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
@@ -20,6 +21,7 @@ import ru.geekbrains.pool.ExplosionPool;
 import ru.geekbrains.sprite.Background;
 import ru.geekbrains.sprite.Bullet;
 import ru.geekbrains.sprite.Enemy;
+import ru.geekbrains.sprite.GameOver;
 import ru.geekbrains.sprite.MainShip;
 import ru.geekbrains.sprite.Star;
 import ru.geekbrains.utils.EnemyGenerator;
@@ -30,9 +32,13 @@ public class GameScreen extends BaseScreen {
 
     private static final int STAR_COUNT = 64;
 
+    private Game game;
+
     private TextureAtlas atlas;
     private Texture bg;
     private Background background;
+
+    private GameOver gameOver;
 
     private BulletPool bulletPool;
     private EnemyPool enemyPool;
@@ -47,6 +53,10 @@ public class GameScreen extends BaseScreen {
     private State state;
     private State stateBuff;
 
+    public GameScreen(Game game) {
+        this.game = game;
+    }
+
     @Override
     public void show() {
         super.show();
@@ -54,6 +64,8 @@ public class GameScreen extends BaseScreen {
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
         bg = new Texture("textures/bg.png");
+        gameOver = new GameOver(atlas, this);
+
         background = new Background(new TextureRegion(bg));
         starArray = new Star[STAR_COUNT];
         for (int i = 0; i < STAR_COUNT; i++) {
@@ -64,6 +76,7 @@ public class GameScreen extends BaseScreen {
         enemyPool = new EnemyPool(bulletPool, explosionPool, worldBounds);
         enemyGenerator = new EnemyGenerator(enemyPool, atlas, worldBounds);
         mainShip = new MainShip(atlas, bulletPool, explosionPool);
+
         music.setLooping(true);
         music.play();
         state = State.PLAYING;
@@ -83,10 +96,12 @@ public class GameScreen extends BaseScreen {
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
         background.resize(worldBounds);
+
         for (Star star:starArray) {
             star.resize(worldBounds);
         }
         mainShip.resize(worldBounds);
+        gameOver.resize(worldBounds);
     }
 
     @Override
@@ -142,6 +157,9 @@ public class GameScreen extends BaseScreen {
         if (state == State.PLAYING) {
             mainShip.touchDown(touch, pointer, button);
         }
+        if (state == State.GAME_OVER){
+            gameOver.touchDown(touch, pointer, button);
+        }
         return false;
     }
 
@@ -149,6 +167,10 @@ public class GameScreen extends BaseScreen {
     public boolean touchUp(Vector2 touch, int pointer, int button) {
         if (state == State.PLAYING) {
             mainShip.touchUp(touch, pointer, button);
+
+        }
+        if (state == State.GAME_OVER){
+            gameOver.touchUp(touch, pointer, button);
         }
         return false;
     }
@@ -166,6 +188,11 @@ public class GameScreen extends BaseScreen {
             mainShip.update(delta);
             enemyGenerator.generate(delta);
         }
+
+        if (state == State.GAME_OVER) {
+            gameOver.update(delta);
+        }
+
     }
 
     private void checkCollisions() {
@@ -232,6 +259,9 @@ public class GameScreen extends BaseScreen {
             bulletPool.drawActiveSprites(batch);
             enemyPool.drawActiveSprites(batch);
         }
+        if (state == State.GAME_OVER){
+            showGameOverScreen();
+        }
         batch.end();
     }
 
@@ -244,6 +274,14 @@ public class GameScreen extends BaseScreen {
     private void pauseOff() {
         state = stateBuff;
         music.play();
+    }
+
+    private void showGameOverScreen(){
+        gameOver.draw(batch);
+    }
+
+    public void newGame(){
+        game.setScreen(new GameScreen(game));
     }
 
 }
